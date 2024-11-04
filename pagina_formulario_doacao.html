@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoaLook - Doe Agora</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="container mt-3">
+        <div class="form-container">
+            <h2 class="form-title">DoaLook - Doe Agora</h2>
+            <form>
+                <div class="row">
+                    <!-- Formulário à esquerda -->
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label for="nomeProduto">Nome Produto</label>
+                            <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
+                        </div>
+                        <div class="form-group">
+                            <label for="descricaoProduto">Descrição</label>
+                            <textarea class="form-control" id="descricaoProduto" rows="3" placeholder="Descrição"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="categoriaProduto">Categoria</label>
+                                <select class="form-control" id="categoriaProduto">
+                                    <option>Categoria</option>
+                                    <option>Roupas</option>
+                                    <option>Calçados</option>
+                                    <option>Acessórios</option>
+                                    <option>Outros</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="condicaoProduto">Condição</label>
+                                <select class="form-control" id="condicaoProduto">
+                                    <option>Condição</option>
+                                    <option>Novo</option>
+                                    <option>Usado - Excelente</option>
+                                    <option>Usado - Bom</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="valorProduto">Valor</label>
+                                <input type="number" class="form-control" id="valorProduto" placeholder="Valor">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tamanhoProduto">Tamanho</label>
+                            <input type="text" class="form-control" id="tamanhoProduto" placeholder="Tamanho">
+                        </div>
+                        <div class="form-group">
+                            <label for="marcaProduto">Marca</label>
+                            <input type="text" class="form-control" id="marcaProduto" placeholder="Marca">
+                        </div>
+                        <div class="form-group">
+                            <label for="corProduto">Cor</label>
+                            <input type="text" class="form-control" id="corProduto" placeholder="Cor">
+                        </div>
+                        <button type="button" class="btn btn-doar btn-block mt-3" onclick="adicionarProduto()">Doar</button>
+                    </div>
+
+                    <!-- Campo de Upload de Imagem -->
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="imagemProduto">Imagem do Produto</label>
+                            <input type="file" class="form-control" id="imagemProduto" accept="image/*">
+                        </div>
+                        <div class="image-upload">
+                            <label class="d-block mb-3">IMAGEM DO PRODUTO</label>
+                            <img id="preview" src="https://img.icons8.com/ios/100/000000/upload-to-cloud.png" alt="Upload Icon">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="footer"></div> <!-- Footer será carregado aqui -->
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js" defer></script>
+</body>
+</html>
