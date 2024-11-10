@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking - DoaLook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 </head>
@@ -14,32 +15,20 @@
     <div class="podium container">
         <h1>PÓDIO</h1>
         <div class="podium-container">
-            <div class="podium-step second-place">
-                <img src="img/trofeus/trofeu_prata.png" alt="Silver Trophy">
-                <div class="podium-text">
-                    <div>ANDRÉ</div>
-                    <div>450 PTS</div>
-                </div>
+            <div class="podium-step second-place" id="second-place">
+                <!-- Dados do 2º lugar serão inseridos aqui -->
             </div>
-            <div class="podium-step first-place">
-                <img src="img/trofeus/trofeu_ouro.png" alt="Gold Trophy">
-                <div class="podium-text">
-                    <div>ROGER</div>
-                    <div>480 PTS</div>
-                </div>
+            <div class="podium-step first-place" id="first-place">
+                <!-- Dados do 1º lugar serão inseridos aqui -->
             </div>
-            <div class="podium-step third-place">
-                <img src="img/trofeus/trofeu_bronze.png" alt="Bronze Trophy">
-                <div class="podium-text">
-                    <div>GABRIEL</div>
-                    <div>270 PTS</div>
-                </div>
+            <div class="podium-step third-place" id="third-place">
+                <!-- Dados do 3º lugar serão inseridos aqui -->
             </div>
         </div>
     </div>
 
     <!-- Ranking Table -->
-    <div class="ranking-table container">
+    <div class="ranking-table container mb-5">
         <h2 class="text-center mt-5">RANKING</h2>
         <table class="table table-bordered">
             <thead>
@@ -49,42 +38,66 @@
                     <th>Pontos</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><img src="img/medalhas/medalha_1.png" alt="Gold Medal" width="50"></td>
-                    <td>Roger Corrente</td>
-                    <td>480</td>
-                </tr>
-                <tr>
-                    <td><img src="img/medalhas/medalha_2.png" alt="Silver Medal" width="50"></td>
-                    <td>André Silva</td>
-                    <td>450</td>
-                </tr>
-                <tr>
-                    <td><img src="img/medalhas/medalha_3.png" alt="Bronze Medal" width="50"></td>
-                    <td>Gabriel Corrente</td>
-                    <td>270</td>
-                </tr>
-                <tr>
-                    <td><img src="img/medalhas/medalha_4.png" alt=" "  width="50"></td>
-                    <td>Maria Alves</td>
-                    <td>190</td>
-                </tr>
-                <tr>
-                    <td><img src="img/medalhas/medalha_5.png" alt=" " width="50"></td>
-                    <td>Antônio Alves</td>
-                    <td>85</td>
-                </tr>
+            <tbody id="ranking-table-body">
+                <!-- Dados do ranking serão inseridos aqui -->
             </tbody>
         </table>
     </div>
 
     <div id="footer"></div> <!-- Footer será carregado aqui -->
 
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="scripts.js" defer></script>
+    
+    <script>
+        // Função para carregar o ranking de usuários
+        async function carregarRanking() {
+            try {
+                const response = await fetch('http://localhost:3000/ranking');
+                const ranking = await response.json();
+                
+                // Atualizar pódio com os 3 primeiros
+                const podiumData = [
+                    { id: 'first-place', rank: 0, image: 'img/trofeus/trofeu_ouro.png' },
+                    { id: 'second-place', rank: 1, image: 'img/trofeus/trofeu_prata.png' },
+                    { id: 'third-place', rank: 2, image: 'img/trofeus/trofeu_bronze.png' }
+                ];
+
+                podiumData.forEach((podium, index) => {
+                    if (ranking[index]) {
+                        document.getElementById(podium.id).innerHTML = `
+                            <img src="${podium.image}" alt="Trophy">
+                            <div class="podium-text">
+                                <div>${ranking[index].nome}</div>
+                                <div>${ranking[index].pontos} PTS</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                // Atualizar a tabela de ranking
+                const rankingTableBody = document.getElementById('ranking-table-body');
+                rankingTableBody.innerHTML = ''; // Limpar o conteúdo existente
+
+                ranking.forEach((user, index) => {
+                    const medalImage = index < 5 ? `img/medalhas/medalha_${index + 1}.png` : '';
+                    rankingTableBody.innerHTML += `
+                        <tr>
+                            <td>${medalImage ? `<img src="${medalImage}" alt="Medalha" width="50">` : index + 1}</td>
+                            <td>${user.nome}</td>
+                            <td>${user.pontos}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Erro ao carregar o ranking:', error);
+            }
+        }
+
+        // Chamar a função para carregar o ranking ao carregar a página
+        document.addEventListener('DOMContentLoaded', carregarRanking);
+    </script>
 </body>
 </html>

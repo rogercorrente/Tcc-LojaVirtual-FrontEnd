@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho - DoaLook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="container my-5">
+        <h2 class="text-center">Seu Carrinho</h2>
+        <table class="table table-bordered mt-4">
+            <thead class="thead-light">
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>R$ Unit.</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="carrinhoContainer">
+                <!-- Os itens do carrinho serão carregados aqui dinamicamente -->
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4>Valor Total do Pedido: <span id="totalPedido">R$ 0,00</span></h4>
+            <button class="btn btn-danger btn-lg" onclick="finalizarPedido()">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <div id="footer"></div> <!-- Footer será carregado aqui -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js" defer></script>
+
+</body>
+</html>

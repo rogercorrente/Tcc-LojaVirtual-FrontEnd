@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Pedido</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .form-check-input-lg {
+            width: 1.5em;
+            height: 1.5em;
+            margin-right: 0.5em;
+            margin-top: 1em;
+        }
+        .moeda-icon {
+            margin-left: 0.5em;
+        }
+        .bonus-info {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div> <!-- Navbar será carregada pelo JavaScript -->
+
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Detalhes do Pedido</h1>
+
+        <div class="row">
+            <!-- Coluna Esquerda com Endereço, Cupom e Moedas -->
+            <div class="col-md-5">
+                <h3 class="mb-3">Endereço de Entrega:</h3>
+                <p id="enderecoEntrega" class="border p-2 rounded bg-light"></p> <!-- Endereço preenchido pelo script -->
+
+                <h3 class="mt-4 mb-3">Cupom de Desconto:</h3>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
+                    </div>
+                    <input type="text" id="cupom" class="form-control" placeholder="Digite o Código">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" onclick="aplicarCupom()">Aplicar Cupom</button>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input form-check-input-lg" type="checkbox" id="usarMoedas" onchange="atualizarTotal()">
+                    <label class="form-check-label" for="usarMoedas">
+                        <i class="fas fa-coins fa-3x text-warning moeda-icon"></i>
+                        Usar Moedas (<span id="moedasDisponiveis">0</span> moedas disponíveis)
+                    </label>
+                </div>
+
+                <div class="mt-3">
+                    <p>Valor Total do Pedido: R$ <span id="valorTotalPedido">0.00</span></p>
+                    <p>Desconto com Moedas: -R$ <span id="descontoMoedas">0.00</span></p>
+                    <h5>Valor Final: R$ <span id="valorFinal">0.00</span></h5>
+                    <!-- Exibição de pontos e moedas que o usuário vai ganhar com ícones -->
+                    <p class="bonus-info">
+                        Você ganhará 
+                        <i class="fas fa-star text-warning"></i> <span id="pontosGanhos">0</span> ponto(s) e 
+                        <i class="fas fa-coins text-warning"></i> <span id="moedasGanhas">0</span> moeda(s) com essa compra.
+                    </p>
+                </div>
+                <button onclick="finalizarCompra()" class="btn btn-success btn-block mt-3">Pagar e Finalizar Pedido</button>
+            </div>
+
+            <!-- Coluna Direita com Itens do Pedido -->
+            <div class="col-md-7">
+                <h3 class="mb-3">Itens do Pedido</h3>
+                <table id="itensPedido" class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>R$ Unit.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Itens do pedido serão inseridos aqui pelo script -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer" class="mt-5"></div> <!-- Footer será carregado pelo JavaScript -->
+
+    <!-- Carrega o script JavaScript e Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="scripts.js"></script>
+    <script>
+        // Atualiza o total e calcula pontos e moedas com base no valor final
+        function atualizarTotal() {
+            const valorTotalPedido = parseFloat(document.getElementById('valorTotalPedido').textContent);
+            const usarMoedas = document.getElementById('usarMoedas').checked;
+            const moedasDisponiveis = parseInt(document.getElementById('moedasDisponiveis').textContent);
+            
+            let descontoMoedas = 0;
+            if (usarMoedas) {
+                descontoMoedas = Math.min(moedasDisponiveis * 0.25, valorTotalPedido);
+            }
+
+            const valorComCupom = valorTotalPedido * (1 - (descontoCupom || 0));
+            const valorFinal = valorComCupom - descontoMoedas;
+
+            document.getElementById('descontoMoedas').textContent = descontoMoedas.toFixed(2);
+            document.getElementById('valorFinal').textContent = valorFinal.toFixed(2);
+
+            // Calcula os pontos e moedas com base no valor final
+            const pontosGanhos = Math.floor(valorFinal);
+            const moedasGanhas = Math.floor(valorFinal);
+
+            document.getElementById('pontosGanhos').textContent = pontosGanhos;
+            document.getElementById('moedasGanhas').textContent = moedasGanhas;
+        }
+    </script>
+</body>
+</html>
