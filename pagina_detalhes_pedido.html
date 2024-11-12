@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto - DoaLook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="container mt-3 mb-3">
+        <div class="row">
+            <!-- Imagem do Produto -->
+            <div class="col-md-5">
+                <img id="productImage" src="img/produtos/default.jpg" class="img-fluid" alt="Imagem do Produto">
+            </div>
+
+            <!-- Informações do Produto -->
+            <div class="col-md-7">
+                <h1 id="productName">Nome do Produto</h1>
+                <p id="productDescription" class="mt-3">Descrição do produto</p>
+                <hr>
+                <p id="donatedBy"><strong>Doado por:</strong> Roger</p>
+                <p class="text-muted" id="originalPrice"><del>R$ 11,00</del></p>
+                <p class="text-danger h4"><strong>R$ <span id="productPrice">10,00</span></strong></p>
+                
+                <!-- Botão Adicionar ao Carrinho -->
+                <button id="addToCartButton" class="btn btn-danger w-50 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-shopping-cart mr-2"></i> Adicionar ao Carrinho
+                </button>
+            </div>
+        </div>
+
+        <!-- Seção de Avaliações -->
+        <div class="mt-5">
+            <h3>Avaliações de Produtos Doados por Este Usuário</h3>
+            <div id="reviews">
+                <!-- Avaliações serão carregadas dinamicamente aqui -->
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js" defer></script>
+    <script>
+        async function carregarDetalhesDoProduto() {
+            const productId = new URLSearchParams(window.location.search).get('id');
+            try {
+                // Busca as informações do produto pelo ID
+                const response = await fetch(`http://localhost:3000/produtos/${productId}`);
+                const produto = await response.json();
+
+                // Atualiza a página com os detalhes do produto
+                document.getElementById('productImage').src = produto.imagem || 'img/produtos/default.jpg';
+                document.getElementById('productName').textContent = produto.nome;
+                document.getElementById('productDescription').textContent = produto.descricao;
+                document.getElementById('originalPrice').textContent = produto.preco_original ? `R$ ${produto.preco_original.toFixed(2)}` : '';
+                document.getElementById('productPrice').textContent = produto.valor.toFixed(2);
+                document.getElementById('donatedBy').innerHTML = `<strong>Doado por:</strong> ${produto.doador || 'Anônimo'}`;
+
+                // Verifica se o produto já está no carrinho
+                const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+                const userId = usuarioLogado?.id;
+                const carrinhoResponse = userId ? await fetch(`http://localhost:3000/carrinho/${userId}`) : { json: () => [] };
+                const carrinho = await carrinhoResponse.json();
+                const estaNoCarrinho = carrinho.some(item => item.id === produto.id);
+
+                // Atualiza o botão com o estado correto
+                const addToCartButton = document.getElementById('addToCartButton');
+                addToCartButton.innerHTML = `<i class="fas fa-shopping-cart mr-2"></i> ${estaNoCarrinho ? 'No Carrinho' : 'Adicionar ao Carrinho'}`;
+                addToCartButton.disabled = estaNoCarrinho;
+
+                // Configura o evento do botão para adicionar ao carrinho
+                if (!estaNoCarrinho) {
+                    addToCartButton.addEventListener('click', () => adicionarAoCarrinho(productId));
+                }
+
+                // Carrega as avaliações dos produtos do mesmo doador
+                if (produto.user_id) {
+                    await carregarAvaliacoesDoador(produto.user_id);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar detalhes do produto:', error);
+            }
+        }
+
+        async function carregarAvaliacoesDoador(userId) {
+            try {
+                const response = await fetch(`http://localhost:3000/avaliacoes_doador/${userId}`);
+                const avaliacoes = await response.json();
+                const reviewsContainer = document.getElementById('reviews');
+                reviewsContainer.innerHTML = '';
+
+                if (avaliacoes.length === 0) {
+                    reviewsContainer.innerHTML = '<p>Este doador ainda não possui avaliações.</p>';
+                } else {
+                    avaliacoes.forEach(avaliacao => {
+                        const avaliacaoElement = `
+                            <div class="review mb-3">
+                                <span class="stars">${'★'.repeat(avaliacao.avaliacao)}${'☆'.repeat(5 - avaliacao.avaliacao)}</span>
+                                <p><strong>${avaliacao.comentario}</strong><br>
+                                <em>${avaliacao.nome} - ${new Date(avaliacao.data_avaliacao).toLocaleDateString()}</em></p>
+                            </div>
+                        `;
+                        reviewsContainer.innerHTML += avaliacaoElement;
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar avaliações do doador:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarDetalhesDoProduto);
+    </script>
+</body>
+</html>

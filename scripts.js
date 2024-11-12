@@ -25,27 +25,32 @@ function loadComponents() {
 // Chama a função quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', loadComponents);
 
+
 // Função para atualizar a navbar com base no estado de login
 function atualizarNavbar() {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
     const loginLink = document.getElementById('loginLink');
     const profileLink = document.getElementById('profileLink');
     const logoutLink = document.getElementById('logoutLink');
-    const cartLink = document.getElementById('cartLink'); // Ícone do carrinho
+    const cartLink = document.getElementById('cartLink');
+    const ordersLink = document.getElementById('ordersLink'); // Novo link para Meus Pedidos
 
     if (usuarioLogado) {
         profileLink.style.display = 'block';
         logoutLink.style.display = 'block';
-        cartLink.style.display = 'block'; // Mostra o ícone do carrinho
+        cartLink.style.display = 'block';
+        ordersLink.style.display = 'block'; // Exibe o link Meus Pedidos para usuários logados
         loginLink.style.display = 'none';
         profileLink.querySelector('a').textContent = usuarioLogado.nome || 'Perfil';
     } else {
         profileLink.style.display = 'none';
         logoutLink.style.display = 'none';
-        cartLink.style.display = 'none'; // Esconde o ícone do carrinho
+        cartLink.style.display = 'none';
+        ordersLink.style.display = 'none'; // Esconde o link Meus Pedidos para visitantes
         loginLink.style.display = 'block';
     }
 }
+
 
 
 // Função para verificar login ao clicar em "Quero Doar"
@@ -290,9 +295,13 @@ async function carregarProdutos() {
             const productCard = `
                 <div class="col-md-3">
                     <div class="card product-card mb-4">
-                        <img src="${produto.imagem}" class="card-img-top" alt="${produto.nome}">
+                        <a href="pagina_detalhes_pedido.html?id=${produto.id}">
+                            <img src="${produto.imagem}" class="card-img-top" alt="${produto.nome}">
+                        </a>
                         <div class="card-body">
-                            <h5 class="card-title">${produto.nome}</h5>
+                            <a href="pagina_detalhes_pedido.html?id=${produto.id}" class="text-dark">
+                                <h5 class="card-title">${produto.nome}</h5>
+                            </a>
                             <p class="card-text">${produto.descricao}</p>
                             <p class="card-text font-weight-bold text-danger">R$ ${produto.valor.toFixed(2)}</p>
                             <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center"
@@ -310,6 +319,7 @@ async function carregarProdutos() {
         console.error('Erro ao carregar produtos:', error);
     }
 }
+
 
 async function adicionarAoCarrinho(produtoId) {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
@@ -629,6 +639,130 @@ async function carregarPerfil() {
     }
 }
 
+// Função para carregar os pedidos e verificar se já foram avaliados
+async function carregarPedidos() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (!usuarioLogado) {
+        alert('Faça login para visualizar seus pedidos.');
+        window.location.href = 'pagina_login.html';
+        return;
+    }
+
+    try {
+        // Faz uma solicitação para obter os pedidos do usuário logado
+        const response = await fetch(`http://localhost:3000/pedidos/${usuarioLogado.id}`);
+        if (!response.ok) {
+            throw new Error('Erro ao carregar pedidos');
+        }
+
+        const pedidos = await response.json();
+        const pedidosContainer = document.getElementById('pedidosContainer');
+        pedidosContainer.innerHTML = '';
+
+        if (pedidos.length === 0) {
+            pedidosContainer.innerHTML = '<p>Nenhum pedido encontrado.</p>';
+        } else {
+            pedidos.forEach(pedido => {
+                const pedidoElement = `
+                    <div class="pedido mb-4">
+                        <h5>Pedido #${pedido.id}</h5>
+                        <p><strong>Data:</strong> ${new Date(pedido.data_pedido).toLocaleDateString()}</p>
+                        <p><strong>Valor Total:</strong> R$ ${pedido.valor_total.toFixed(2)}</p>
+                        ${pedido.avaliado
+                            ? `<p>Avaliação já realizada para este pedido.</p>`
+                            : `
+                                <div class="form-group">
+                                    <label for="avaliacao_${pedido.id}">Avaliação (1-5):</label>
+                                    <input type="number" id="avaliacao_${pedido.id}" class="form-control" min="1" max="5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="comentario_${pedido.id}">Comentário:</label>
+                                    <textarea id="comentario_${pedido.id}" class="form-control"></textarea>
+                                </div>
+                                <button onclick="avaliarPedido(${pedido.id}, ${usuarioLogado.id})" class="btn btn-primary">Enviar Avaliação</button>
+                            `}
+                        <hr>
+                    </div>
+                `;
+                pedidosContainer.innerHTML += pedidoElement;
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar pedidos:', error);
+        alert('Erro ao carregar pedidos.');
+    }
+}
+
+
+// Função para enviar a avaliação de um pedido
+async function avaliarPedido(pedidoId, userId) {
+    const avaliacao = document.getElementById(`avaliacao_${pedidoId}`).value;
+    const comentario = document.getElementById(`comentario_${pedidoId}`).value.trim();
+
+    if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+        alert('Por favor, insira uma nota de avaliação entre 1 e 5.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/avaliarPedido`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pedidoId, userId, avaliacao, comentario })
+        });
+
+        if (response.ok) {
+            // Atualizar os pontos e moedas no localStorage
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            usuarioLogado.pontos += 3;
+            usuarioLogado.moedas += 3;
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+
+            // Redirecionar para a página de sucesso
+            window.location.href = 'avaliacao_sucesso.html';
+        } else {
+            alert('Erro ao enviar a avaliação.');
+        }
+    } catch (error) {
+        console.error('Erro ao enviar avaliação:', error);
+    }
+}
+
+
+// Função para exibir o modal de sucesso da avaliação
+function mostrarModalSucesso() {
+    let modal = document.getElementById('modalSucessoAvaliacao');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalSucessoAvaliacao';
+        modal.innerHTML = `
+            <div class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Obrigado!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>Sua avaliação foi enviada com sucesso!</p>
+                            <p>Você ganhou <strong>+3 moedas</strong> e <strong>+3 pontos</strong> pela sua avaliação.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    $(modal).find('.modal').modal('show');
+}
+
+
+
 
 
 // Função para carregar o perfil apenas na página correta
@@ -648,8 +782,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('enderecoEntrega') && document.getElementById('itensPedido')) {
         carregarDadosFinalizarPedido();
     }
+    if (document.getElementById('pedidosContainer')) {
+        carregarPedidos();
+    }
     // Chama a função para carregar o perfil apenas na página de perfil
     carregarPerfilSeNecessario();
 });
-
-

@@ -11,6 +11,7 @@ body, html {
 /* Container para garantir que o conteúdo ocupe o espaço completo */
 .container {
     flex: 1;
+    padding: 15px;
 }
 
 /* ---- Navbar ---- */
@@ -220,7 +221,7 @@ footer {
     width: 100%;
 }
 
-/* Mensagem de Sucesso Estilo */
+/* ---- Mensagem de Sucesso Estilo ---- */
 .mensagem-sucesso {
     background-color: #f0f9ff;
     border: 1px solid #b6f2c2;
@@ -275,3 +276,63 @@ footer {
     border-radius: 8px;
 }
 
+/* ---- Media Queries para telas menores ---- */
+@media (max-width: 768px) {
+    .navbar-custom .container {
+        flex-direction: column;
+    }
+    .product-card {
+        padding: 10px;
+    }
+    .podium-container {
+        flex-direction: column;
+        margin-top: 50px;
+    }
+    .podium-step {
+        width: 80px;
+        margin-bottom: 20px;
+    }
+    .podium h1 {
+        font-size: 2em;
+    }
+    .form-container {
+        padding: 20px;
+    }
+    .ranking-table th, .ranking-table td {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-card h5 {
+        font-size: 1em;
+    }
+    .product-card p, .product-card .price {
+        font-size: 0.8em;
+    }
+    .podium-container {
+        margin-top: 30px;
+    }
+    .podium h1 {
+        font-size: 1.5em;
+    }
+    .podium-step {
+        width: 70px;
+    }
+    .mensagem-sucesso {
+        padding: 20px;
+    }
+    .mensagem-sucesso .icone-sucesso {
+        font-size: 3em;
+    }
+    .mensagem-sucesso h2 {
+        font-size: 1.4em;
+    }
+    .mensagem-sucesso .ganhos {
+        font-size: 1em;
+    }
+    .btn-doar {
+        font-size: 0.9em;
+        padding: 8px 16px;
+    }
+}
