@@ -788,3 +788,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Chama a função para carregar o perfil apenas na página de perfil
     carregarPerfilSeNecessario();
 });
+
+// Função para manter o back-end ativo de forma silenciosa
+function manterBackendAtivo() {
+    setInterval(() => {
+        fetch('https://tcc-lojavirtual-backend.onrender.com')
+            .catch(() => {
+                // Ignora erros de conexão para evitar impacto no usuário
+            });
+    }, 600000); // Pinga o back-end a cada 10 minutos (600000 ms)
+}
+
+// Ativa o ping ao carregar o site
+document.addEventListener('DOMContentLoaded', manterBackendAtivo);
+
