@@ -119,7 +119,7 @@ async function cadastrarUsuario() {
     const senha = document.getElementById('senha').value.trim();
 
     try {
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome, email, endereco, senha })
@@ -151,7 +151,7 @@ document.getElementById('formLogin')?.addEventListener('submit', async (event) =
     const senha = document.getElementById('senha').value.trim();
 
     try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, senha })
@@ -192,7 +192,7 @@ async function uploadImage(file) {
         const formData = new FormData();
         formData.append('image', file);
 
-        const response = await fetch('http://localhost:3000/upload', { method: 'POST', body: formData });
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/upload', { method: 'POST', body: formData });
 
         if (!response.ok) {
             throw new Error('Erro no upload da imagem');
@@ -254,7 +254,7 @@ async function adicionarProduto() {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/produtos', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/produtos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(produto)
@@ -279,8 +279,8 @@ async function carregarProdutos() {
 
         // Obter produtos e verificar itens no carrinho se o usuário estiver logado
         const [produtosResponse, carrinhoResponse] = await Promise.all([
-            fetch('http://localhost:3000/produtos'),
-            userId ? fetch(`http://localhost:3000/carrinho/${userId}`) : Promise.resolve({ json: () => [] })
+            fetch('https://tcc-lojavirtual-backend.onrender.com/produtos'),
+            userId ? fetch(`https://tcc-lojavirtual-backend.onrender.com/carrinho/${userId}`) : Promise.resolve({ json: () => [] })
         ]);
 
         const produtos = await produtosResponse.json();
@@ -333,7 +333,7 @@ async function adicionarAoCarrinho(produtoId) {
 
     try {
         // Verificar se o item já está no carrinho antes de adicionar
-        const verificarResponse = await fetch(`http://localhost:3000/carrinho/${userId}`);
+        const verificarResponse = await fetch(`https://tcc-lojavirtual-backend.onrender.com/carrinho/${userId}`);
         const carrinho = await verificarResponse.json();
         
         if (carrinho.some(item => item.id === produtoId)) {
@@ -342,7 +342,7 @@ async function adicionarAoCarrinho(produtoId) {
         }
 
         // Adicionar o item ao carrinho, pois ele ainda não está lá
-        const response = await fetch('http://localhost:3000/carrinho/adicionar', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/carrinho/adicionar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId, produto_id: produtoId, quantidade })
@@ -369,7 +369,7 @@ async function carregarCarrinho() {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/carrinho/${usuarioLogado.id}`);
+        const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/carrinho/${usuarioLogado.id}`);
         const carrinho = await response.json();
         console.log('Carrinho:', carrinho);
 
@@ -402,7 +402,7 @@ async function carregarCarrinho() {
 // Função para remover item do carrinho
 async function removerDoCarrinho(userId, produtoId) {
     try {
-        const response = await fetch('http://localhost:3000/carrinho/remover', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/carrinho/remover', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId, produto_id: produtoId })
@@ -444,7 +444,7 @@ async function carregarDadosFinalizarPedido() {
         console.log("Carregando dados do usuário e do carrinho...");
         
         // Carregar endereço e moedas do usuário
-        const responseUser = await fetch(`http://localhost:3000/user/${usuarioLogado.id}`);
+        const responseUser = await fetch(`https://tcc-lojavirtual-backend.onrender.com/user/${usuarioLogado.id}`);
         if (!responseUser.ok) throw new Error('Erro ao carregar os dados do usuário');
         const userData = await responseUser.json();
 
@@ -455,7 +455,7 @@ async function carregarDadosFinalizarPedido() {
         if (moedasDisponiveis) moedasDisponiveis.textContent = userData.moedas;
 
         // Carregar itens do carrinho
-        const responseCarrinho = await fetch(`http://localhost:3000/carrinho/${usuarioLogado.id}`);
+        const responseCarrinho = await fetch(`https://tcc-lojavirtual-backend.onrender.com/carrinho/${usuarioLogado.id}`);
         if (!responseCarrinho.ok) throw new Error('Erro ao carregar o carrinho');
         const carrinho = await responseCarrinho.json();
         const itensPedidoContainer = document.getElementById('itensPedido').querySelector('tbody');
@@ -553,7 +553,7 @@ async function finalizarCompra() {
     });
 
     try {
-        const response = await fetch('http://localhost:3000/finalizarPedido', {
+        const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/finalizarPedido', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -587,7 +587,7 @@ async function carregarPerfil() {
 
     try {
         // Obtenha os dados do usuário a partir da API
-        const response = await fetch(`http://localhost:3000/user/${usuarioLogado.id}`);
+        const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/user/${usuarioLogado.id}`);
         if (!response.ok) {
             console.error('Erro na resposta do servidor:', response.status, response.statusText);
             return;
@@ -601,7 +601,7 @@ async function carregarPerfil() {
         document.getElementById('moedasUsuario').textContent = `${data.moedas} moedas`;
 
         // Obtenha o ranking para determinar a posição do usuário
-        const rankingResponse = await fetch('http://localhost:3000/ranking');
+        const rankingResponse = await fetch('https://tcc-lojavirtual-backend.onrender.com/ranking');
         if (!rankingResponse.ok) {
             console.error('Erro ao carregar o ranking:', rankingResponse.status, rankingResponse.statusText);
             return;
@@ -650,7 +650,7 @@ async function carregarPedidos() {
 
     try {
         // Faz uma solicitação para obter os pedidos do usuário logado
-        const response = await fetch(`http://localhost:3000/pedidos/${usuarioLogado.id}`);
+        const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/pedidos/${usuarioLogado.id}`);
         if (!response.ok) {
             throw new Error('Erro ao carregar pedidos');
         }
@@ -705,7 +705,7 @@ async function avaliarPedido(pedidoId, userId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/avaliarPedido`, {
+        const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/avaliarPedido`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pedidoId, userId, avaliacao, comentario })
