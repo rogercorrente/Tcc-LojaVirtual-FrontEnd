@@ -54,7 +54,7 @@
             const productId = new URLSearchParams(window.location.search).get('id');
             try {
                 // Busca as informações do produto pelo ID
-                const response = await fetch(`http://localhost:3000/produtos/${productId}`);
+                const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/produtos/${productId}`);
                 const produto = await response.json();
 
                 // Atualiza a página com os detalhes do produto
@@ -68,7 +68,7 @@
                 // Verifica se o produto já está no carrinho
                 const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
                 const userId = usuarioLogado?.id;
-                const carrinhoResponse = userId ? await fetch(`http://localhost:3000/carrinho/${userId}`) : { json: () => [] };
+                const carrinhoResponse = userId ? await fetch(`https://tcc-lojavirtual-backend.onrender.com/carrinho/${userId}`) : { json: () => [] };
                 const carrinho = await carrinhoResponse.json();
                 const estaNoCarrinho = carrinho.some(item => item.id === produto.id);
 
@@ -93,7 +93,7 @@
 
         async function carregarAvaliacoesDoador(userId) {
             try {
-                const response = await fetch(`http://localhost:3000/avaliacoes_doador/${userId}`);
+                const response = await fetch(`https://tcc-lojavirtual-backend.onrender.com/avaliacoes_doador/${userId}`);
                 const avaliacoes = await response.json();
                 const reviewsContainer = document.getElementById('reviews');
                 reviewsContainer.innerHTML = '';

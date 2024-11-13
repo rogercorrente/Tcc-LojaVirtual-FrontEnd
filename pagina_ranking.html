@@ -55,7 +55,7 @@
         // Função para carregar o ranking de usuários
         async function carregarRanking() {
             try {
-                const response = await fetch('http://localhost:3000/ranking');
+                const response = await fetch('https://tcc-lojavirtual-backend.onrender.com/ranking');
                 const ranking = await response.json();
                 
                 // Atualizar pódio com os 3 primeiros
