@@ -1,7 +1,6 @@
-<!-- navbar.html -->
-<nav class="navbar navbar-expand-lg navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
     <div class="container">
-        <a class="navbar-brand" href="#">DoaLook</a>
+        <a class="navbar-brand" href="pagina_principal.html">DoaLook</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,27 +9,21 @@
                 <li class="nav-item"><a class="nav-link" href="pagina_principal.html">Principal</a></li>
                 <li class="nav-item"><a class="nav-link" href="pagina_ranking.html">Ranking</a></li>
                 <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
-                
-                <!-- Link de Entrar/Logout -->
                 <li class="nav-item" id="loginLink"><a class="nav-link" href="pagina_login.html">Entrar</a></li>
                 <li class="nav-item" id="profileLink" style="display: none;">
                     <a class="nav-link" href="pagina_perfil.html">Perfil</a>
                 </li>
-                <!-- Novo link para Meus Pedidos, visível apenas para usuários logados -->
                 <li class="nav-item" id="ordersLink" style="display: none;">
                     <a class="nav-link" href="pagina_pedidos.html">Meus Pedidos</a>
                 </li>
                 <li class="nav-item" id="logoutLink" style="display: none;">
                     <a class="nav-link" href="#" onclick="logout()">Sair</a>
                 </li>
-
-                <!-- Ícone do carrinho -->
                 <li class="nav-item" id="cartLink" style="display: none;">
                     <a class="nav-link" href="pagina_carrinho.html">
-                        <i class="fas fa-shopping-cart"></i> <!-- Ícone do carrinho -->
+                        <i class="fas fa-shopping-cart"></i>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a class="btn btn-danger nav-link text-white" href="#" onclick="verificarLoginParaDoacao()">Quero Doar</a>
                 </li>

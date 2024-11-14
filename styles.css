@@ -48,6 +48,19 @@ body, html {
     background-color: #c9302c;
 }
 
+/* Estilo do botão de toggler */
+.navbar-toggler {
+    border-color: #FFD700; /* Borda dourada */
+}
+.navbar-toggler-icon {
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28%255,%255,%255,1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
 /* ---- Banner ---- */
 .banner {
     text-align: center;
@@ -121,6 +134,8 @@ body, html {
     justify-content: center;
     align-items: flex-end;
     margin-top: 150px;
+    flex-wrap: nowrap; /* Impede que os elementos empilhem */
+    gap: 0;
 }
 .podium-step {
     width: 100px;
@@ -130,7 +145,7 @@ body, html {
     color: #fff;
     font-weight: bold;
     position: relative;
-    margin: 0;
+    margin: 0; /* Espaçamento entre os degraus */
 }
 .podium-step img {
     width: 90px;
@@ -153,14 +168,17 @@ body, html {
 .first-place {
     background-color: #ffd700;
     height: 160px;
+    z-index: 2; /* Garante que o 1º lugar fique acima dos demais */
 }
 .second-place {
     background-color: #b0b0b0;
     height: 140px;
+    z-index: 1;
 }
 .third-place {
     background-color: #cd7f32;
     height: 120px;
+    z-index: 1;
 }
 
 /* ---- Ranking Table ---- */
@@ -215,7 +233,7 @@ body, html {
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #d9534f;
+    background-color: #333;    
     color: white;
     margin-top: auto;
     width: 100%;
@@ -233,42 +251,35 @@ footer {
     margin: auto;
     text-align: center;
 }
-
 .mensagem-sucesso .icone-sucesso {
     font-size: 5em;
     color: #2b7a0b;
 }
-
 .mensagem-sucesso h2 {
     font-size: 1.8em;
     font-weight: bold;
     color: #2b7a0b;
     margin-bottom: 15px;
 }
-
 .mensagem-sucesso p {
     font-size: 1.1em;
     margin: 0;
 }
-
 .mensagem-sucesso .ganhos {
     font-size: 1.5em;
     color: #333;
     font-weight: bold;
 }
-
 .mensagem-sucesso .moedas, .mensagem-sucesso .pontos {
     color: #2b7a0b;
     display: inline-flex;
     align-items: center;
     margin: 0 5px;
 }
-
 .mensagem-sucesso .moedas i, .mensagem-sucesso .pontos i {
     font-size: 1.2em;
     margin-right: 5px;
 }
-
 .btn-success {
     font-size: 1.1em;
     font-weight: bold;
@@ -278,22 +289,18 @@ footer {
 
 /* ---- Media Queries para telas menores ---- */
 @media (max-width: 768px) {
-    .navbar-custom .container {
+    .navbar-nav {
         flex-direction: column;
     }
-    .product-card {
-        padding: 10px;
+    .navbar-nav .nav-item {
+        margin: 5px 0;
     }
     .podium-container {
-        flex-direction: column;
-        margin-top: 50px;
+        flex-wrap: nowrap; /* Garante que os elementos permaneçam horizontais */
+        gap: 0;
     }
     .podium-step {
-        width: 80px;
-        margin-bottom: 20px;
-    }
-    .podium h1 {
-        font-size: 2em;
+        margin: 0;
     }
     .form-container {
         padding: 20px;
@@ -304,20 +311,9 @@ footer {
 }
 
 @media (max-width: 480px) {
-    .product-card h5 {
-        font-size: 1em;
-    }
-    .product-card p, .product-card .price {
+    .btn-doar {
+        padding: 5px 10px;
         font-size: 0.8em;
-    }
-    .podium-container {
-        margin-top: 30px;
-    }
-    .podium h1 {
-        font-size: 1.5em;
-    }
-    .podium-step {
-        width: 70px;
     }
     .mensagem-sucesso {
         padding: 20px;
@@ -330,9 +326,5 @@ footer {
     }
     .mensagem-sucesso .ganhos {
         font-size: 1em;
-    }
-    .btn-doar {
-        font-size: 0.9em;
-        padding: 8px 16px;
     }
 }

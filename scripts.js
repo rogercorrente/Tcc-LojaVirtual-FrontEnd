@@ -792,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Função para manter o back-end ativo de forma silenciosa
 function manterBackendAtivo() {
     setInterval(() => {
-        fetch('https://tcc-lojavirtual-backend.onrender.com')
+        fetch('http://localhost:3000')
             .catch(() => {
                 // Ignora erros de conexão para evitar impacto no usuário
             });
