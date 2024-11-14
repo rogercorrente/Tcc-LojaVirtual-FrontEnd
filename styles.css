@@ -81,6 +81,11 @@ body, html {
     background-color: white;
     margin-bottom: 20px;
     transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 350px; /* Adicionado para altura uniforme dos cards */
 }
 .product-card:hover {
     transform: translateY(-5px);
@@ -96,11 +101,19 @@ body, html {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adicionado para títulos longos */
 }
 .product-card p {
     font-size: 0.9em;
     color: #777;
     margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Adicionado para limitar a descrição a 2 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 40px; /* Adicionado para descrição uniforme */
 }
 .product-card .price {
     font-size: 1.2em;
